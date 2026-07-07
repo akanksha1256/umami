@@ -5,15 +5,22 @@ import { LinkButton } from '@/components/common/LinkButton';
 import { SortableLabel } from '@/components/common/SortableLabel';
 import { useMessages, useNavigation } from '@/components/hooks';
 import { SquarePen } from '@/components/icons';
+import { WebsiteMetricCell } from './WebsiteMetricCell';
 
 export interface WebsitesTableProps extends DataTableProps {
   showActions?: boolean;
   allowEdit?: boolean;
   allowView?: boolean;
+  showMetrics?: boolean;
   renderLink?: (row: any) => ReactNode;
 }
 
-export function WebsitesTable({ showActions, renderLink, ...props }: WebsitesTableProps) {
+export function WebsitesTable({
+  showActions,
+  showMetrics,
+  renderLink,
+  ...props
+}: WebsitesTableProps) {
   const { t, labels } = useMessages();
   const { renderUrl } = useNavigation();
 
@@ -23,6 +30,39 @@ export function WebsitesTable({ showActions, renderLink, ...props }: WebsitesTab
         {renderLink}
       </DataColumn>
       <DataColumn id="domain" label={<SortableLabel label={t(labels.domain)} sortKey="domain" />} />
+      {showMetrics && (
+        <DataColumn
+          id="visitors"
+          label={
+            <SortableLabel label={t(labels.visitors)} sortKey="visitors" defaultDirection="desc" />
+          }
+          width="120px"
+        >
+          {(row: any) => <WebsiteMetricCell websiteId={row.id} metric="visitors" />}
+        </DataColumn>
+      )}
+      {showMetrics && (
+        <DataColumn
+          id="visits"
+          label={
+            <SortableLabel label={t(labels.visits)} sortKey="visits" defaultDirection="desc" />
+          }
+          width="120px"
+        >
+          {(row: any) => <WebsiteMetricCell websiteId={row.id} metric="visits" />}
+        </DataColumn>
+      )}
+      {showMetrics && (
+        <DataColumn
+          id="views"
+          label={
+            <SortableLabel label={t(labels.views)} sortKey="pageviews" defaultDirection="desc" />
+          }
+          width="120px"
+        >
+          {(row: any) => <WebsiteMetricCell websiteId={row.id} metric="pageviews" />}
+        </DataColumn>
+      )}
       <DataColumn
         id="created"
         label={
