@@ -3,6 +3,7 @@ import { DataGrid } from '@/components/common/DataGrid';
 import Link from '@/components/common/Link';
 import { useLoginQuery, useNavigation, useUserWebsitesQuery } from '@/components/hooks';
 import { Favicon } from '@/index';
+import { WebsitesMetricsTable } from './WebsitesMetricsTable';
 import { WebsitesTable } from './WebsitesTable';
 
 export function WebsitesDataTable({
@@ -11,12 +12,14 @@ export function WebsitesDataTable({
   allowEdit = true,
   allowView = true,
   showActions = true,
+  showMetrics = false,
 }: {
   userId?: string;
   teamId?: string;
   allowEdit?: boolean;
   allowView?: boolean;
   showActions?: boolean;
+  showMetrics?: boolean;
 }) {
   const { user } = useLoginQuery();
   const queryResult = useUserWebsitesQuery({ userId: userId || user?.id, teamId });
@@ -31,12 +34,15 @@ export function WebsitesDataTable({
     </Row>
   );
 
+  const Table = showMetrics ? WebsitesMetricsTable : WebsitesTable;
+
   return (
     <DataGrid query={queryResult} allowSearch allowPaging>
       {({ data }) => (
-        <WebsitesTable
+        <Table
           data={data}
           showActions={showActions}
+          showMetrics={showMetrics}
           allowEdit={allowEdit}
           allowView={allowView}
           renderLink={renderLink}

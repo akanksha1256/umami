@@ -4,6 +4,7 @@ import { PageBody } from '@/components/common/PageBody';
 import { PageHeader } from '@/components/common/PageHeader';
 import { Panel } from '@/components/common/Panel';
 import { useLoginQuery, useMessages, useNavigation, useTeamMembersQuery } from '@/components/hooks';
+import { WebsiteDateFilter } from '@/components/input/WebsiteDateFilter';
 import { ROLES } from '@/lib/constants';
 import { WebsiteAddButton } from './WebsiteAddButton';
 import { WebsitesDataTable } from './WebsitesDataTable';
@@ -24,10 +25,11 @@ export function WebsitesPage() {
     <PageBody>
       <Column gap="6" margin="2">
         <PageHeader title={t(labels.websites)}>
+          <WebsiteDateFilter showAllTime={false} />
           {showActions && <WebsiteAddButton teamId={teamId} />}
         </PageHeader>
         <Panel>
-          <WebsitesDataTable teamId={teamId} showActions={showActions} />
+          <WebsitesDataTable teamId={teamId} showActions={showActions} showMetrics />
         </Panel>
       </Column>
     </PageBody>

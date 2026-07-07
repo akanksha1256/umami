@@ -18,6 +18,28 @@ export interface WebsiteStatsData {
   };
 }
 
+export function getWebsiteStatsQueryOptions({
+  websiteId,
+  compare,
+  startAt,
+  endAt,
+  filters,
+  get,
+}: {
+  websiteId: string;
+  compare?: string;
+  startAt: number;
+  endAt: number;
+  filters: Record<string, any>;
+  get: (url: string, params?: object) => Promise<any>;
+}) {
+  return {
+    queryKey: ['websites:stats', { websiteId, compare, startAt, endAt, ...filters }] as const,
+    queryFn: () => get(`/websites/${websiteId}/stats`, { compare, startAt, endAt, ...filters }),
+    enabled: !!websiteId,
+  };
+}
+
 export function useWebsiteStatsQuery(
   { websiteId, compare }: { websiteId: string; compare?: string },
   options?: UseQueryOptions<WebsiteStatsData, Error, WebsiteStatsData>,
@@ -27,9 +49,7 @@ export function useWebsiteStatsQuery(
   const filters = useFilterParameters();
 
   return useQuery<WebsiteStatsData>({
-    queryKey: ['websites:stats', { websiteId, compare, startAt, endAt, ...filters }],
-    queryFn: () => get(`/websites/${websiteId}/stats`, { compare, startAt, endAt, ...filters }),
-    enabled: !!websiteId,
+    ...getWebsiteStatsQueryOptions({ websiteId, compare, startAt, endAt, filters, get }),
     ...options,
   });
 }
